@@ -92,14 +92,14 @@ library(rpart.plot)</code></pre>
 training_raw&lt;-read.csv(&quot;pml-training.csv&quot;,header=TRUE,na.strings = &quot;NA&quot;)</code></pre>
 <p>Set a seed so the results are reproducible.</p>
 <pre class="r"><code>set.seed(584123)</code></pre>
-<p>The data will then be cleaned to remove any variables that are not numeric, mostly empty or are time stamps.</p>
+<p>The data will then be cleaned to remove any variables that are not numeric, mostly empty or are time stamps.  Also remove unnecissary static variables.</p>
 <pre class="r"><code>nums&lt;- sapply(training_raw,is.numeric) # find variables that are numeric
-nums[2:7]=FALSE # remove timestamps and window
+nums[1:7]=FALSE # remove timestamps and window
 nums[160]=TRUE # keep last variable that contains the classe to predict
 training&lt;-training_raw[,nums] # update data with just the variables above
 training&lt;-training[,colSums(is.na(training)) &lt; nrow(training)*0.5] # if columns are more than 50% NA's, drop it</code></pre>
 <p>Remove fields with high correlation.</p>
-<pre class="r"><code>corm&lt;-cor(training[,-54]) 
+<pre class="r"><code>corm&lt;-cor(training[,-53]) 
 corval&lt;-findCorrelation(corm)# find correlated variables
 training&lt;-training[,-corval] # remove these variables</code></pre>
 <p>The training data will now be split into a training set and a validation set. This cross validation will be used to see how well the model is able to predict on data that we know the answer to.</p>
@@ -118,37 +118,37 @@ confusionMatrix(predictions,validation_set$classe) # Look at the results of the 
 ## 
 ##           Reference
 ## Prediction    A    B    C    D    E
-##          A 2232    0    0    0    0
-##          B    0 1516    0    0    0
-##          C    0    2 1368    0    0
-##          D    0    0    0 1286    0
-##          E    0    0    0    0 1442
+##          A 2224   14    0    0    0
+##          B    6 1497   11    0    0
+##          C    0    7 1343    4    1
+##          D    0    0   14 1282    8
+##          E    2    0    0    0 1433
 ## 
 ## Overall Statistics
-##                                      
-##                Accuracy : 0.9997     
-##                  95% CI : (0.9991, 1)
-##     No Information Rate : 0.2845     
-##     P-Value [Acc &gt; NIR] : &lt; 2.2e-16  
-##                                      
-##                   Kappa : 0.9997     
-##  Mcnemar's Test P-Value : NA         
+##                                           
+##                Accuracy : 0.9915          
+##                  95% CI : (0.9892, 0.9934)
+##     No Information Rate : 0.2845          
+##     P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
+##                                           
+##                   Kappa : 0.9892          
+##  Mcnemar's Test P-Value : NA              
 ## 
 ## Statistics by Class:
 ## 
-##                      Class: A Class: B Class: C Class: D Class: E
-## Sensitivity            1.0000   0.9987   1.0000   1.0000   1.0000
-## Specificity            1.0000   1.0000   0.9997   1.0000   1.0000
-## Pos Pred Value         1.0000   1.0000   0.9985   1.0000   1.0000
-## Neg Pred Value         1.0000   0.9997   1.0000   1.0000   1.0000
+##                       Class: A Class: B Class: C Class: D Class: E
+## Sensitivity            0.9964   0.9862   0.9817   0.9969   0.9938
+## Specificity            0.9975   0.9973   0.9981   0.9966   0.9997
+## Pos Pred Value         0.9937   0.9888   0.9911   0.9831   0.9986
+## Neg Pred Value         0.9986   0.9967   0.9961   0.9994   0.9986
 ## Prevalence             0.2845   0.1935   0.1744   0.1639   0.1838
-## Detection Rate         0.2845   0.1932   0.1744   0.1639   0.1838
-## Detection Prevalence   0.2845   0.1932   0.1746   0.1639   0.1838
-## Balanced Accuracy      1.0000   0.9993   0.9998   1.0000   1.0000</code></pre>
+## Detection Rate         0.2835   0.1908   0.1712   0.1634   0.1826
+## Detection Prevalence   0.2852   0.1930   0.1727   0.1662   0.1829
+## Balanced Accuracy      0.9970   0.9917   0.9899   0.9968   0.9967</code></pre>
 <p>Finally the test data will be used with this model to predict the final values.</p>
 <pre class="r"><code>p&lt;-predict(modFit,newdata = testing_raw)
 p</code></pre>
-<pre><code>##  [1] A A A A A A A A A A A A A A A A A A A A
+<pre><code>##  [1] B A B A A E D B A A B C B A E E A B B B
 ## Levels: A B C D E</code></pre>
 </div>
 </div>

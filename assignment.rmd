@@ -24,13 +24,13 @@ training_raw<-read.csv("pml-training.csv",header=TRUE,na.strings = "NA")
 
 Set a seed so the results are reproducible.  
 ```{r}
-set.seed(584123)
+set.seed()
 ```
 
-The data will then be cleaned to remove any variables that are not numeric, mostly empty or are time stamps.
+The data will then be cleaned to remove any variables that are not numeric, mostly empty or are time stamps.  Also remove unnecissary static variables.
 ```{r}
 nums<- sapply(training_raw,is.numeric) # find variables that are numeric
-nums[2:7]=FALSE # remove timestamps and window
+nums[1:7]=FALSE # remove timestamps and window
 nums[160]=TRUE # keep last variable that contains the classe to predict
 training<-training_raw[,nums] # update data with just the variables above
 training<-training[,colSums(is.na(training)) < nrow(training)*0.5] # if columns are more than 50% NA's, drop it
@@ -38,7 +38,7 @@ training<-training[,colSums(is.na(training)) < nrow(training)*0.5] # if columns 
 
 Remove fields with high correlation.
 ```{r}
-corm<-cor(training[,-54]) 
+corm<-cor(training[,-53]) 
 corval<-findCorrelation(corm)# find correlated variables
 training<-training[,-corval] # remove these variables
 ```
