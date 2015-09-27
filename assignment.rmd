@@ -2,7 +2,7 @@ Practical Machine Learning Assignment
 =====================================
 
 ## Overview
-Using the supplied data, located at the locataions below, a model was created to predict how well a person performed an excersise base off various data points.
+Using the supplied data, located at the locations below, a model was created to predict how well a person performed an exercise base off various data points.
 Training data URL: [https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv]
 Testing data URL: [https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv]
 
@@ -22,12 +22,12 @@ testing_raw<-read.csv("pml-testing.csv",header=TRUE,na.strings = "NA")
 training_raw<-read.csv("pml-training.csv",header=TRUE,na.strings = "NA")
 ```
 
-Set a seed so the results are reproduceable.  
+Set a seed so the results are reproducible.  
 ```{r}
 set.seed(584123)
 ```
 
-The data will then be cleaned to remove any variables that are not numeric, mostly empty or are timestamps.
+The data will then be cleaned to remove any variables that are not numeric, mostly empty or are time stamps.
 ```{r}
 nums<- sapply(training_raw,is.numeric) # find variables that are numeric
 nums[2:7]=FALSE # remove timestamps and window
